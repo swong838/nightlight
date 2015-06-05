@@ -10,12 +10,16 @@ const int
 
 Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, PIXEL_PIN, NEO_GRB + NEO_KHZ800);
 
-int readTemperature(){
-    int t = 0;
-    return t;
+int getTemperature(){
+    int temp_C = 20;
+    int raw = analogRead(THERMAL_PIN);
+    // from https://learn.adafruit.com/tmp36-temperature-sensor/using-a-temp-sensor
+    int voltage = (raw) * (5000/1024);
+    temp_C = (voltage - 500) / 10;
+    return temp_C;
 }
-uint32_t getColorFromTemperature(t){
-   return pixels.Color(red, green, blue); 
+uint32_t getColorFromTemperature(temp_C){
+   return pixels.Color(255,255,255); 
 }
 
 void applyLighting(uint32_t targetColor) {
@@ -28,6 +32,7 @@ void applyLighting(uint32_t targetColor) {
 
 void setup(){
     randomSeed(analogRead(0));
+    pinMode(THERMAL_PIN, INPUT);
 #if defined (__AVR_ATtiny85__)
     if (F_CPU == 16000000) clock_prescale_set(clock_div_1);
 #endif
@@ -35,8 +40,8 @@ void setup(){
     pixels.begin(); 
 }
 void loop(){
-    int t = readTemperature();
-    uint32_t newColor = getColorFromTemperature(t);
+    int temp_C = getTemperature();
+    uint32_t newColor = getColorFromTemperature(temp_C);
     applyLighting(newColor);
     delay(INTERVAL);
 }
