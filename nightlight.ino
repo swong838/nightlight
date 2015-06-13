@@ -19,6 +19,14 @@ int getTemperature(){
     return temp_C;
 }
 uint32_t getColorFromTemperature(temp_C){
+/*
+this.clip - need function to clip range from 0-255
+    t = (temp - 22) * 10;
+    r = this.clip((128 - t) * 2);
+    g = this.clip((128 - Math.abs(t)) * 2);
+    b = this.clip((128 + t) * 2);
+*/
+
    return pixels.Color(255,255,255); 
 }
 
